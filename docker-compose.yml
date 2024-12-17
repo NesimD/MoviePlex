@@ -1,0 +1,88 @@
+services:
+ mongo-media:
+  image: mongo:latest
+  ports:
+    - 27017:27017
+  volumes:
+    - mongodb_media_data:/data/db
+    
+ mysql-user:
+  image: mysql:latest
+  ports:
+    - 3306:3306
+  volumes:
+    - mysql_user_data:/var/lib/mysql
+  environment:
+   MYSQL_ROOT_PASSWORD: abc123
+    
+ mysql-subscription:
+  image: mysql:latest
+  ports:
+    - 3307:3306
+  volumes:
+    - mysql_subscription_data:/var/lib/mysql
+  environment:
+   MYSQL_ROOT_PASSWORD: abc123
+    
+ media-service:
+  depends_on:
+    - mongo-media
+  image: nesimd/media-service
+  ports:
+    - 8080:8080
+  links:
+    - mongo-media
+  environment:
+   MONGODB_PORT: 27017
+   MONGODB_HOST: mongo-media
+   
+ subscription-service:
+  depends_on:
+    - mysql-subscription
+  image: nesimd/subscription-service
+  ports:
+    - 8082:8082
+  links:
+    - mysql-subscription
+  environment:
+   MYSQL_DB_USERNAME: root
+   MYSQL_DB_PASSWORD: abc123
+   MYSQL_DB_HOST: mysql-subscription
+   MYSQL_DB_PORT: 3306
+
+ user-service:
+  depends_on:
+    - media-service
+    - subscription-service
+  image: nesimd/user-service
+  ports:
+    - 8081:8081
+  links:
+    - media-service
+    - subscription-service
+  environment:
+   MEDIA_SERVICE_BASEURL: media-service:8080
+   SUBSCRIPTION_SERVICE_BASEURL: subscription-service:8082
+   MYSQL_DB_USERNAME: root
+   MYSQL_DB_PASSWORD: abc123
+   MYSQL_DB_HOST: mysql-user
+   MYSQL_DB_PORT: 3306
+
+ api-gateway:
+   depends_on:
+     - media-service
+     - user-service
+   image: nesimd/api-gateway
+   ports:
+     - 8083:8083
+   links:
+     - media-service
+     - user-service
+   environment:
+     MEDIA_SERVICE_BASEURL: media-service:8080
+     USER_SERVICE_BASEURL: user-service:8081
+
+volumes:
+ mongodb_media_data:
+ mysql_subscription_data:
+ mysql_user_data:

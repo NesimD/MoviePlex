@@ -1,0 +1,80 @@
+server:
+  port: 8083
+
+logging:
+  level:
+    root: INFO
+    org.springframework.cloud.gateway: TRACE
+    org.springframework.cloud.gateway.route.RouteDefinitionRouteLocator: INFO
+    reactor.netty: TRACE
+
+spring:
+  cloud:
+    gateway:
+      routes:
+        - id: user-service
+          uri: http://${USER_SERVICE_BASEURL:localhost:8081}
+          predicates:
+            - Path=/users
+          filters:
+            - SetPath=/api/user
+        - id: user-service-get-by-id
+          uri: http://${USER_SERVICE_BASEURL:localhost:8081}
+          predicates:
+            - Path=/users/{id}
+            - Method=GET
+          filters:
+            - SetPath=/api/user/{id}
+        - id: user-service-add-favorite-movie
+          uri: http://${USER_SERVICE_BASEURL:localhost:8081}
+          predicates:
+            - Path=/users/{id}/favoriteMovie
+            - Method=POST
+          filters:
+            - SetPath=/api/user/{id}/favoriteMovie
+        - id: user-service-add-favorite-serie
+          uri: http://${USER_SERVICE_BASEURL:localhost:8081}
+          predicates:
+            - Path=/users/{id}/favoriteSerie
+            - Method=POST
+          filters:
+            - SetPath=/api/user/{id}/favoriteSerie
+        - id: user-service-delete-favorite-movie
+          uri: http://${USER_SERVICE_BASEURL:localhost:8081}
+          predicates:
+            - Path=/users/{id}/favoriteMovie/{mediaCode}
+            - Method=DELETE
+          filters:
+            - SetPath=/api/user/{id}/favoriteMovie/{mediaCode}
+        - id: user-service-delete-favorite-serie
+          uri: http://${USER_SERVICE_BASEURL:localhost:8081}
+          predicates:
+            - Path=/users/{id}/favoriteSerie/{mediaCode}
+            - Method=DELETE
+          filters:
+            - SetPath=/api/user/{id}/favoriteSerie/{mediaCode}
+        - id: media-service-movie
+          uri: http://${MEDIA_SERVICE_BASEURL:localhost:8080}
+          predicates:
+            - Path=/movies
+          filters:
+            - SetPath=/api/media/movie
+        - id: media-service-movie-mediacode
+          uri: http://${MEDIA_SERVICE_BASEURL:localhost:8080}
+          predicates:
+            - Path=/movies/{mediaCode}
+            - Method=GET
+          filters:
+            - SetPath=/api/media/movie/{mediaCode}
+        - id: media-service-serie
+          uri: http://${MEDIA_SERVICE_BASEURL:localhost:8080}
+          predicates:
+            - Path=/series
+          filters:
+            - SetPath=/api/media/serie
+        - id: media-service-serie-mediacode
+          uri: http://${MEDIA_SERVICE_BASEURL:localhost:8080}
+          predicates:
+            - Path=/series/{mediacode}
+          filters:
+            - SetPath=/api/media/serie/{mediacode}
