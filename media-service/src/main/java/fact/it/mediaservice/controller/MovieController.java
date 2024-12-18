@@ -1,8 +1,7 @@
 package fact.it.mediaservice.controller;
 
-import fact.it.mediaservice.dto.MovieRequest;
-import fact.it.mediaservice.dto.MovieResponse;
-import fact.it.mediaservice.model.Movie;
+import fact.it.mediaservice.dto.movie.MovieRequest;
+import fact.it.mediaservice.dto.movie.MovieResponse;
 import fact.it.mediaservice.service.MovieService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -10,7 +9,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/media/movie")

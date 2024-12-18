@@ -1,9 +1,7 @@
 package fact.it.mediaservice.controller;
 
-import fact.it.mediaservice.dto.MovieRequest;
-import fact.it.mediaservice.dto.MovieResponse;
-import fact.it.mediaservice.dto.SerieRequest;
-import fact.it.mediaservice.dto.SerieResponse;
+import fact.it.mediaservice.dto.serie.SerieRequest;
+import fact.it.mediaservice.dto.serie.SerieResponse;
 import fact.it.mediaservice.service.SerieService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

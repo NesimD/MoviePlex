@@ -4,9 +4,12 @@ import fact.it.subscriptionservice.dto.SubscriptionResponse;
 import fact.it.subscriptionservice.service.SubscriptionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.function.EntityResponse;
 
 import java.util.List;
+import java.util.Optional;
 
 
 @RestController
@@ -16,9 +19,15 @@ public class SubscriptionController {
     private final SubscriptionService subscriptionService;
 
     @GetMapping("{id}")
-    @ResponseStatus(HttpStatus.OK)
-    public SubscriptionResponse getSubscriptionById(@PathVariable("id") long subscriptionId) {
-        return subscriptionService.getSubscriptionById(subscriptionId);
+    public ResponseEntity<SubscriptionResponse> getSubscriptionById(@PathVariable("id") long subscriptionId) {
+        Optional<SubscriptionResponse> subscriptionResponseOptional = subscriptionService.getSubscriptionById(subscriptionId);
+
+        if (subscriptionResponseOptional.isPresent()) {
+            SubscriptionResponse subscriptionResponse = subscriptionResponseOptional.get();
+
+            return new ResponseEntity<>(subscriptionResponse, HttpStatus.OK);
+        }
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
     @GetMapping

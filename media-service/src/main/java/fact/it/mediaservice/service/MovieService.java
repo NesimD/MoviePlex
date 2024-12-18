@@ -1,9 +1,15 @@
 package fact.it.mediaservice.service;
 
-import fact.it.mediaservice.dto.MovieRequest;
-import fact.it.mediaservice.dto.MovieResponse;
+import fact.it.mediaservice.dto.movie.MovieRequest;
+import fact.it.mediaservice.dto.movie.MovieResponse;
+import fact.it.mediaservice.model.Director;
+import fact.it.mediaservice.model.Genre;
 import fact.it.mediaservice.model.Movie;
+import fact.it.mediaservice.model.Rating;
+import fact.it.mediaservice.repository.DirectorRepository;
+import fact.it.mediaservice.repository.GenreRepository;
 import fact.it.mediaservice.repository.MovieRepository;
+import fact.it.mediaservice.repository.RatingRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -14,16 +20,23 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class MovieService {
     private final MovieRepository movieRepository;
+    private final DirectorRepository directorRepository;
+    private final GenreRepository genreRepository;
+    private final RatingRepository ratingRepository;
 
     public void createMovie(MovieRequest movieRequest){
+        Director director = directorRepository.findById(movieRequest.getDirectorId()).orElse(null);
+        Genre genre = genreRepository.findById(movieRequest.getGenreId()).orElse(null);
+        Rating rating = ratingRepository.findById(movieRequest.getRatingId()).orElse(null);
+
         Movie movie = Movie.builder()
                 .mediaCode(movieRequest.getMediaCode())
                 .title(movieRequest.getTitle())
                 .description(movieRequest.getDescription())
-                .director(movieRequest.getDirector())
+                .director(director)
                 .releaseDate(movieRequest.getReleaseDate())
-                .genre(movieRequest.getGenre())
-                .rating(movieRequest.getRating())
+                .genre(genre)
+                .rating(rating)
                 .reviewScore(movieRequest.getReviewScore())
                 .build();
 
@@ -49,6 +62,9 @@ public class MovieService {
 
     public MovieResponse updateMovieById(MovieRequest movieRequest, String id) {
         Optional<Movie> movieOptional = movieRepository.findById(id);
+        Director director = directorRepository.findById(movieRequest.getDirectorId()).orElse(null);
+        Genre genre = genreRepository.findById(movieRequest.getGenreId()).orElse(null);
+        Rating rating = ratingRepository.findById(movieRequest.getRatingId()).orElse(null);
 
         if (movieOptional.isPresent()) {
             Movie movie = movieOptional.get();
@@ -56,10 +72,10 @@ public class MovieService {
             movie.setMediaCode(movieRequest.getMediaCode());
             movie.setTitle(movieRequest.getTitle());
             movie.setDescription(movieRequest.getDescription());
-            movie.setDirector(movieRequest.getDirector());
+            movie.setDirector(director);
             movie.setReleaseDate(movieRequest.getReleaseDate());
-            movie.setGenre(movieRequest.getGenre());
-            movie.setRating(movieRequest.getRating());
+            movie.setGenre(genre);
+            movie.setRating(rating);
             movie.setReviewScore(movieRequest.getReviewScore());
             return mapToMovieResponse(movie);
         }

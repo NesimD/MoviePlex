@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -44,9 +45,15 @@ public class SubscriptionService {
         return subscriptions.stream().map(this::mapToSubscriptionResponse).toList();
     }
 
-    public SubscriptionResponse getSubscriptionById(long subscriptionId) {
-        Subscription subscription = subscriptionRepository.findSubscriptionById(subscriptionId);
-        return mapToSubscriptionResponse(subscription);
+    public Optional<SubscriptionResponse> getSubscriptionById(long subscriptionId) {
+        Optional<Subscription> subscriptionOptional = subscriptionRepository.findById(subscriptionId);
+
+        if (subscriptionOptional.isPresent()) {
+            SubscriptionResponse subscriptionResponse = mapToSubscriptionResponse(subscriptionOptional.get());
+
+            return Optional.of(subscriptionResponse);
+        }
+        return Optional.empty();
     }
 
     private SubscriptionResponse mapToSubscriptionResponse(Subscription subscription) {
