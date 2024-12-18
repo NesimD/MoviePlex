@@ -14,6 +14,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
@@ -36,15 +37,15 @@ class SubscriptionServiceApplicationTests {
         subscription.setDescription("1 user + HD");
         subscription.setPrice(9);
 
-        when(subscriptionRepository.findSubscriptionById(1L)).thenReturn(subscription);
+        when(subscriptionRepository.findById(1L)).thenReturn(Optional.of(subscription));
 
         // Act
-        SubscriptionResponse subscriptions = subscriptionService.getSubscriptionById(1L);
+        SubscriptionResponse subscriptionResponse = subscriptionService.getSubscriptionById(1L);
 
         // Assert
-        assertEquals("Basis", subscriptions.getName());
+        assertEquals("Basis", subscriptionResponse.getName());
 
-        verify(subscriptionRepository, times(1)).findSubscriptionById(1L);
+        verify(subscriptionRepository, times(1)).findById(1L);
     }
 
     @Test
