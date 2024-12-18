@@ -33,7 +33,7 @@ public class RatingService {
         return ratings.stream().map(this::mapToRatingResponse).toList();
     }
 
-    public void createRating(RatingRequest ratingRequest){
+    public RatingResponse createRating(RatingRequest ratingRequest){
 
         Rating rating = Rating.builder()
                 .name(ratingRequest.getName())
@@ -41,6 +41,7 @@ public class RatingService {
                 .build();
 
         ratingRepository.save(rating);
+        return mapToRatingResponse(rating);
     }
 
     public void deleteRating(String id) {

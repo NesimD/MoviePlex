@@ -24,7 +24,7 @@ public class SerieService {
     private final RatingRepository ratingRepository;
     private final EpisodeRepository episodeRepository;
 
-    public void createSerie(SerieRequest serieRequest){
+    public SerieResponse createSerie(SerieRequest serieRequest){
         Genre genre = genreRepository.findById(serieRequest.getGenreId()).orElse(null);
         Rating rating = ratingRepository.findById(serieRequest.getRatingId()).orElse(null);
         Episode episode = episodeRepository.findById(serieRequest.getEpisodeId()).orElse(null);
@@ -41,6 +41,7 @@ public class SerieService {
                 .build();
 
         serieRepository.save(serie);
+        return mapToSerieResponse(serie);
     }
 
     public List<SerieResponse> getAllSeries() {

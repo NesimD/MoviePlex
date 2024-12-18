@@ -37,13 +37,14 @@ public class GenreService {
         return genres.stream().map(this::mapToGenreResponse).toList();
     }
 
-    public void createGenre(GenreRequest genreRequest){
+    public GenreResponse createGenre(GenreRequest genreRequest){
 
         Genre genre = Genre.builder()
                 .name(genreRequest.getName())
                 .build();
 
         genreRepository.save(genre);
+        return mapToGenreResponse(genre);
     }
 
     public void deleteGenre(String id) {

@@ -37,9 +37,13 @@ public class DirectorController {
     }
 
     @PostMapping
-    @ResponseStatus(HttpStatus.OK)
-    public void createDirector(@RequestBody DirectorRequest directorRequest) {
-        directorService.createDirector(directorRequest);
+    public ResponseEntity<DirectorResponse> createDirector(@RequestBody DirectorRequest directorRequest) {
+        DirectorResponse directorResponse =  directorService.createDirector(directorRequest);
+
+        if (directorResponse == null) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+        return new ResponseEntity<>(directorResponse, HttpStatus.CREATED);
     }
 
     @Transactional

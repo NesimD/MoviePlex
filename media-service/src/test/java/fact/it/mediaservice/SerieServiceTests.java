@@ -11,9 +11,11 @@ import fact.it.mediaservice.repository.GenreRepository;
 import fact.it.mediaservice.repository.RatingRepository;
 import fact.it.mediaservice.repository.SerieRepository;
 import fact.it.mediaservice.service.SerieService;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.Arrays;
@@ -22,7 +24,6 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 @SpringBootTest
@@ -254,6 +255,7 @@ public class SerieServiceTests {
         List<SerieResponse> serieResponses = serieService.getAllSeries();
 
         // Assert
+        assertEquals(2, serieResponses.size());
         assertEquals(serie1.getMediaCode(), serieResponses.get(0).getMediaCode());
         assertEquals(serie1.getTitle(), serieResponses.get(0).getTitle());
         assertEquals(serie1.getGenre().getId(), serieResponses.get(0).getGenre().getId());
@@ -279,6 +281,34 @@ public class SerieServiceTests {
 
     @Test public void testCreateSerie() {
         // Arrange
+        Serie serie = new Serie();
+
+        Genre genre = new Genre();
+        genre.setId("1");
+        genre.setName("Action");
+
+        Rating rating = new Rating();
+        rating.setId("1");
+        rating.setName("PG-13");
+        rating.setDescription("Rated PG-13 for reckless and illegal behavior involving teens, violence, language and sexual content");
+
+        Episode episode = new Episode();
+        episode.setId("1");
+        episode.setTitle("Long Day's Journey Into Night");
+        episode.setDescription("The Matthews' family road trip takes a horrifying turn when they are detoured to a small town from which they cannot leave. When their family RV crashes, Sheriff Boyd Stevens and other residents rush to save them before the sun goes down.");
+        episode.setDuration(52);
+        episode.setReleaseDate(new Date("11/12/2020"));
+        episode.setRating(rating);
+
+        serie.setMediaCode("ss001");
+        serie.setTitle("From");
+        serie.setReleaseDate(new Date("11/12/2020"));
+        serie.setSeasons(4);
+        serie.setEpisode(episode);
+        serie.setGenre(genre);
+        serie.setRating(rating);
+        serie.setReviewScore(8);
+
         SerieRequest serieRequest = new SerieRequest();
         serieRequest.setMediaCode("ss001");
         serieRequest.setTitle("From");
@@ -289,11 +319,13 @@ public class SerieServiceTests {
         serieRequest.setRatingId("1");
         serieRequest.setReviewScore(8);
 
+        when(serieRepository.save(Mockito.any(Serie.class))).thenReturn(serie);
+
         // Act
-        serieService.createSerie(serieRequest);
+        SerieResponse serieResponse = serieService.createSerie(serieRequest);
 
         // Assert
-        verify(serieRepository, times(1)).save(any(Serie.class));
+        Assertions.assertThat(serieResponse).isNotNull();
     }
 
     @Test public void testUpdateSerieByIdSerieFound() {

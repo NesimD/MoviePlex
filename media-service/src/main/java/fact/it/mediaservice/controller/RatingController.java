@@ -37,9 +37,13 @@ public class RatingController {
     }
 
     @PostMapping
-    @ResponseStatus(HttpStatus.OK)
-    public void createRating(@RequestBody RatingRequest ratingRequest) {
-        ratingService.createRating(ratingRequest);
+    public ResponseEntity<RatingResponse> createRating(@RequestBody RatingRequest ratingRequest) {
+       RatingResponse ratingResponse = ratingService.createRating(ratingRequest);
+
+       if (ratingResponse == null) {
+           return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+       }
+       return new ResponseEntity<>(ratingResponse, HttpStatus.CREATED);
     }
 
     @Transactional

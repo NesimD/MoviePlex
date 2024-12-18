@@ -33,7 +33,7 @@ public class DirectorService {
         return directors.stream().map(this::mapToDirectorResponse).toList();
     }
 
-    public void createDirector(DirectorRequest directorRequest){
+    public DirectorResponse createDirector(DirectorRequest directorRequest){
 
         Director director = Director.builder()
                 .firstName(directorRequest.getFirstName())
@@ -41,6 +41,7 @@ public class DirectorService {
                 .build();
 
         directorRepository.save(director);
+        return mapToDirectorResponse(director);
     }
 
     public void deleteDirector(String id) {
