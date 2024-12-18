@@ -24,7 +24,7 @@ public class MovieService {
     private final GenreRepository genreRepository;
     private final RatingRepository ratingRepository;
 
-    public void createMovie(MovieRequest movieRequest){
+    public MovieResponse createMovie(MovieRequest movieRequest){
         Director director = directorRepository.findById(movieRequest.getDirectorId()).orElse(null);
         Genre genre = genreRepository.findById(movieRequest.getGenreId()).orElse(null);
         Rating rating = ratingRepository.findById(movieRequest.getRatingId()).orElse(null);
@@ -41,6 +41,7 @@ public class MovieService {
                 .build();
 
         movieRepository.save(movie);
+        return mapToMovieResponse(movie);
     }
 
     public List<MovieResponse> getAllMovies() {

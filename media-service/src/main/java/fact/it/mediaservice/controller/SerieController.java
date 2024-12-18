@@ -35,9 +35,13 @@ public class SerieController {
     }
 
     @PostMapping
-    @ResponseStatus(HttpStatus.OK)
-    public void createSerie(@RequestBody SerieRequest SerieRequest) {
-        serieService.createSerie(SerieRequest);
+    public ResponseEntity<SerieResponse> createSerie(@RequestBody SerieRequest SerieRequest) {
+        SerieResponse serieResponse = serieService.createSerie(SerieRequest);
+
+        if (serieResponse == null) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+        return new ResponseEntity<>(serieResponse, HttpStatus.CREATED);
     }
 
     @PutMapping("{id}")

@@ -4,6 +4,7 @@ import fact.it.mediaservice.dto.movie.MovieRequest;
 import fact.it.mediaservice.dto.movie.MovieResponse;
 import fact.it.mediaservice.service.MovieService;
 import lombok.RequiredArgsConstructor;
+import org.apache.coyote.Response;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -35,9 +36,13 @@ public class MovieController {
     }
 
     @PostMapping
-    @ResponseStatus(HttpStatus.OK)
-    public void createMovie(@RequestBody MovieRequest movieRequest) {
-        movieService.createMovie(movieRequest);
+    public ResponseEntity<MovieResponse> createMovie(@RequestBody MovieRequest movieRequest) {
+        MovieResponse movieResponse = movieService.createMovie(movieRequest);
+
+        if (movieResponse == null) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+        return new ResponseEntity<>(movieResponse, HttpStatus.CREATED);
     }
 
     @PutMapping("{id}")

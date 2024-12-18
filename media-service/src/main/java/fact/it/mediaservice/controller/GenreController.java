@@ -37,9 +37,13 @@ public class GenreController {
     }
 
     @PostMapping
-    @ResponseStatus(HttpStatus.OK)
-    public void createGenre(@RequestBody GenreRequest genreRequest) {
-        genreService.createGenre(genreRequest);
+    public ResponseEntity<GenreResponse> createGenre(@RequestBody GenreRequest genreRequest) {
+        GenreResponse genreResponse = genreService.createGenre(genreRequest);
+
+        if (genreResponse == null) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+        return new ResponseEntity<>(genreResponse, HttpStatus.CREATED);
     }
 
     @Transactional

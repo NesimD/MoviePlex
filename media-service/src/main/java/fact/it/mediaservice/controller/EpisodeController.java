@@ -37,9 +37,13 @@ public class EpisodeController {
     }
 
     @PostMapping
-    @ResponseStatus(HttpStatus.OK)
-    public void createEpisode(@RequestBody EpisodeRequest episodeRequest) {
-        episodeService.createEpisode(episodeRequest);
+    public ResponseEntity<EpisodeResponse> createEpisode(@RequestBody EpisodeRequest episodeRequest) {
+       EpisodeResponse episodeResponse = episodeService.createEpisode(episodeRequest);
+
+       if (episodeResponse == null) {
+           return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+       }
+       return new ResponseEntity<>(episodeResponse, HttpStatus.CREATED);
     }
 
     @Transactional

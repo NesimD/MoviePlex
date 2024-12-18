@@ -11,9 +11,11 @@ import fact.it.mediaservice.repository.GenreRepository;
 import fact.it.mediaservice.repository.MovieRepository;
 import fact.it.mediaservice.repository.RatingRepository;
 import fact.it.mediaservice.service.MovieService;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.Arrays;
@@ -246,6 +248,7 @@ class MovieServiceTests {
 		List<MovieResponse> movieResponses = movieService.getAllMovies();
 
 		// Assert
+		assertEquals(2, movieResponses.size());
 		assertEquals(movie1.getMediaCode(), movieResponses.get(0).getMediaCode());
 		assertEquals(movie1.getTitle(), movieResponses.get(0).getTitle());
 		assertEquals(movie1.getDescription(), movieResponses.get(0).getDescription());
@@ -279,6 +282,30 @@ class MovieServiceTests {
 
 	@Test public void testCreateMovie() {
 		// Arrange
+		Director director = new Director();
+		director.setId("1");
+		director.setFirstName("Tom");
+		director.setLastName("Jassens");
+
+		Genre genre = new Genre();
+		genre.setId("1");
+		genre.setName("Action");
+
+		Rating rating = new Rating();
+		rating.setId("1");
+		rating.setName("PG-13");
+		rating.setDescription("Rated PG-13 for reckless and illegal behavior involving teens, violence, language and sexual content");
+
+		Movie movie = new Movie();
+		movie.setMediaCode("mm001");
+		movie.setTitle("The Fast and the Furious: Tokyo Drift");
+		movie.setDescription("A teenager becomes a major competitor in the world of drift racing after moving in with his father in Tokyo to avoid a jail sentence in America.");
+		movie.setDirector(director);
+		movie.setReleaseDate(new Date("11/12/2020"));
+		movie.setGenre(genre);
+		movie.setRating(rating);
+		movie.setReviewScore(8);
+
 		MovieRequest movieRequest = new MovieRequest();
 		movieRequest.setMediaCode("mm001");
 		movieRequest.setTitle("The Fast and the Furious: Tokyo Drift");
@@ -289,12 +316,13 @@ class MovieServiceTests {
 		movieRequest.setRatingId("1");
 		movieRequest.setReviewScore(8);
 
+		when(movieRepository.save(Mockito.any(Movie.class))).thenReturn(movie);
 
 		// Act
-		movieService.createMovie(movieRequest);
+		MovieResponse movieResponse = movieService.createMovie(movieRequest);
 
 		// Assert
-		verify(movieRepository, times(1)).save(any(Movie.class));
+		Assertions.assertThat(movieResponse).isNotNull();
 	}
 
 	@Test public void testUpdateMovieByIdMovieFound() {

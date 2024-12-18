@@ -36,7 +36,7 @@ public class EpisodeService {
         return episodes.stream().map(this::mapToEpisodeResponse).toList();
     }
 
-    public void createEpisode(EpisodeRequest episodeRequest){
+    public EpisodeResponse createEpisode(EpisodeRequest episodeRequest){
         Rating rating = ratingRepository.findById(episodeRequest.getRatingId()).orElse(null);
 
         Episode episode = Episode.builder()
@@ -48,6 +48,7 @@ public class EpisodeService {
                 .build();
 
         episodeRepository.save(episode);
+        return mapToEpisodeResponse(episode);
     }
 
     public void deleteEpisode(String id) {
