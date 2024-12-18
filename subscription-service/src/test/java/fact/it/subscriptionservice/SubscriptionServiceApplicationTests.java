@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -31,19 +32,20 @@ class SubscriptionServiceApplicationTests {
     @Test
     public void testGetSubscriptionById() {
         // Arrange
-        Subscription subscription = new Subscription();
-        subscription.setId(1L);
-        subscription.setName("Basis");
-        subscription.setDescription("1 user + HD");
-        subscription.setPrice(9);
+        Subscription subscription1 = new Subscription();
+        subscription1.setId(1L);
+        subscription1.setName("Basis");
+        subscription1.setDescription("1 user + HD");
+        subscription1.setPrice(9);
 
-        when(subscriptionRepository.findById(1L)).thenReturn(Optional.of(subscription));
+        when(subscriptionRepository.findById(1L)).thenReturn(Optional.of(subscription1));
 
         // Act
-        SubscriptionResponse subscriptionResponse = subscriptionService.getSubscriptionById(1L);
+        Optional<SubscriptionResponse> subscriptionResponseOptional = subscriptionService.getSubscriptionById(1L);
 
         // Assert
-        assertEquals("Basis", subscriptionResponse.getName());
+        assertTrue(subscriptionResponseOptional.isPresent());
+        assertEquals("Basis", subscriptionResponseOptional.get().getName());
 
         verify(subscriptionRepository, times(1)).findById(1L);
     }
