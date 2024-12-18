@@ -1,8 +1,14 @@
 package fact.it.mediaservice.service;
 
-import fact.it.mediaservice.dto.SerieRequest;
-import fact.it.mediaservice.dto.SerieResponse;
+import fact.it.mediaservice.dto.serie.SerieRequest;
+import fact.it.mediaservice.dto.serie.SerieResponse;
+import fact.it.mediaservice.model.Episode;
+import fact.it.mediaservice.model.Genre;
+import fact.it.mediaservice.model.Rating;
 import fact.it.mediaservice.model.Serie;
+import fact.it.mediaservice.repository.EpisodeRepository;
+import fact.it.mediaservice.repository.GenreRepository;
+import fact.it.mediaservice.repository.RatingRepository;
 import fact.it.mediaservice.repository.SerieRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -14,16 +20,23 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class SerieService {
     private final SerieRepository serieRepository;
+    private final GenreRepository genreRepository;
+    private final RatingRepository ratingRepository;
+    private final EpisodeRepository episodeRepository;
 
     public void createSerie(SerieRequest serieRequest){
+        Genre genre = genreRepository.findById(serieRequest.getGenreId()).orElse(null);
+        Rating rating = ratingRepository.findById(serieRequest.getRatingId()).orElse(null);
+        Episode episode = episodeRepository.findById(serieRequest.getEpisodeId()).orElse(null);
+
         Serie serie = Serie.builder()
                 .mediaCode(serieRequest.getMediaCode())
                 .title(serieRequest.getTitle())
-                .genre(serieRequest.getGenre())
+                .genre(genre)
                 .seasons(serieRequest.getSeasons())
-                .episode(serieRequest.getEpisode())
+                .episode(episode)
                 .releaseDate(serieRequest.getReleaseDate())
-                .rating(serieRequest.getRating())
+                .rating(rating)
                 .reviewScore(serieRequest.getReviewScore())
                 .build();
 
@@ -49,17 +62,20 @@ public class SerieService {
 
     public SerieResponse updateSerieById(SerieRequest serieRequest, String id) {
         Optional<Serie> serieOptional = serieRepository.findById(id);
+        Genre genre = genreRepository.findById(serieRequest.getGenreId()).orElse(null);
+        Rating rating = ratingRepository.findById(serieRequest.getRatingId()).orElse(null);
+        Episode episode = episodeRepository.findById(serieRequest.getEpisodeId()).orElse(null);
 
         if (serieOptional.isPresent()) {
             Serie serie = serieOptional.get();
 
             serie.setMediaCode(serieRequest.getMediaCode());
             serie.setTitle(serieRequest.getTitle());
-            serie.setGenre(serieRequest.getGenre());
+            serie.setGenre(genre);
             serie.setSeasons(serieRequest.getSeasons());
-            serie.setEpisode(serieRequest.getEpisode());
+            serie.setEpisode(episode);
             serie.setReleaseDate(serieRequest.getReleaseDate());
-            serie.setRating(serieRequest.getRating());
+            serie.setRating(rating);
             serie.setReviewScore(serieRequest.getReviewScore());
             return mapToSerieResponse(serie);
         }
