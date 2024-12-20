@@ -90,3 +90,10 @@ spring:
             - Path=/series/{mediacode}
           filters:
             - SetPath=/api/media/serie/{mediacode}
+        - id: media-service-serie-all
+          uri: http://${MEDIA_SERVICE_BASEURL:localhost:8080}
+          predicates:
+            - Path=/series
+            - Method=GET
+          filters:
+            - SetPath=/api/media/serie/all
