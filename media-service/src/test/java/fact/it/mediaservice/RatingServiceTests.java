@@ -7,10 +7,11 @@ import fact.it.mediaservice.repository.RatingRepository;
 import fact.it.mediaservice.service.RatingService;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Arrays;
 import java.util.List;
@@ -20,7 +21,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.*;
 
-@SpringBootTest
+@ExtendWith(MockitoExtension.class)
 public class RatingServiceTests {
     @InjectMocks
     private RatingService ratingService;
@@ -58,7 +59,7 @@ public class RatingServiceTests {
         rating.setName("R");
         rating.setDescription("R rated movies definitely contain some adult material. Parents are strongly urged to find out more about this film before they allow their children to accompany them. An R-rated film may include strong language, violence, nudity, drug abuse, other elements, or a combination of the above.");
 
-        when(ratingRepository.findById("1")).thenReturn(Optional.of(rating));
+        when(ratingRepository.findById("100")).thenReturn(Optional.empty());
 
         // Act
         Optional<RatingResponse> ratingResponseOptional = ratingService.getRatingById("100");
@@ -125,8 +126,6 @@ public class RatingServiceTests {
         rating.setId("1");
         rating.setName("R");
         rating.setDescription("R rated movies definitely contain some adult material. Parents are strongly urged to find out more about this film before they allow their children to accompany them. An R-rated film may include strong language, violence, nudity, drug abuse, other elements, or a combination of the above.");
-
-        when(ratingRepository.findById("1")).thenReturn(Optional.of(rating));
 
         ratingService.deleteRating("1");
 

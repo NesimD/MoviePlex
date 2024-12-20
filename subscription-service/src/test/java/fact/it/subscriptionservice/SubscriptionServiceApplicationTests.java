@@ -4,6 +4,7 @@ import fact.it.subscriptionservice.dto.SubscriptionResponse;
 import fact.it.subscriptionservice.model.Subscription;
 import fact.it.subscriptionservice.repository.SubscriptionRepository;
 import fact.it.subscriptionservice.service.SubscriptionService;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -29,8 +30,20 @@ class SubscriptionServiceApplicationTests {
     @Mock
     private SubscriptionRepository subscriptionRepository;
 
+    @BeforeEach
+    public void setUp() {
+        subscriptionService.loadData();
+    }
+
     @Test
-    public void testGetSubscriptionById() {
+    public void testLoadData() {
+        verify(subscriptionRepository, times(1)).save(argThat(subscription -> subscription.getName().equals("Basic")));
+        verify(subscriptionRepository, times(1)).save(argThat(subscription -> subscription.getName().equals("Standard")));
+        verify(subscriptionRepository, times(1)).save(argThat(subscription -> subscription.getName().equals("Premium")));
+    }
+
+    @Test
+    public void testGetSubscriptionByIdSubscriptionFound() {
         // Arrange
         Subscription subscription1 = new Subscription();
         subscription1.setId(1L);
@@ -48,6 +61,18 @@ class SubscriptionServiceApplicationTests {
         assertEquals("Basis", subscriptionResponseOptional.get().getName());
 
         verify(subscriptionRepository, times(1)).findById(1L);
+    }
+
+    @Test
+    public void testGetSubscriptionByIdSubscriptionNotFound() {
+        // Arrange
+        when(subscriptionRepository.findById(10L)).thenReturn(Optional.empty());
+
+        // Act
+        Optional<SubscriptionResponse> subscriptionResponseOptional = subscriptionService.getSubscriptionById(10L);
+
+        // Assert
+        assertEquals(Optional.empty(), subscriptionResponseOptional);
     }
 
     @Test

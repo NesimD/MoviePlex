@@ -39,14 +39,8 @@ public class UserService {
         if (userOptional.isPresent()) {
             User user = userOptional.get();
 
-            SubscriptionResponse subscriptionResponse = webClient.get()
-                    .uri("http://" + subscriptionServiceBaseUrl + "/api/subscription/{id}", user.getSubscriptionId())
-                    .retrieve()
-                    .bodyToMono(SubscriptionResponse.class)
-                    .block();
-
             UserResponse userResponse = mapToUserResponse(user);
-            userResponse.setSubscription(subscriptionResponse);
+            userResponse.setSubscription(getSubscriptionResponse(user));
             userResponse.setFavoriteMovies(getMovieResponses(user));
             userResponse.setFavoriteSeries(getSerieResponses(user));
             return Optional.of(userResponse);
@@ -85,7 +79,7 @@ public class UserService {
                 .collect(Collectors.toList());
     }
 
-    public void createUser(UserRequest userRequest) {
+    public UserResponse createUser(UserRequest userRequest) {
         User user = User.builder()
                 .firstName(userRequest.getFirstName())
                 .lastName(userRequest.getLastName())
@@ -97,9 +91,14 @@ public class UserService {
                 .build();
 
         userRepository.save(user);
+
+        UserResponse userResponse = mapToUserResponse(user);
+        userResponse.setSubscription(getSubscriptionResponse(user));
+
+        return userResponse;
     }
 
-    public void addFavoriteMovie(Long id, MovieRequest movieRequest) {
+    public UserResponse addFavoriteMovie(Long id, MovieRequest movieRequest) {
         Optional<User> userOptional = userRepository.findById(id);
 
         if (userOptional.isPresent()) {
@@ -111,10 +110,12 @@ public class UserService {
                     .build();
 
             favoriteMovieRepository.save(favoriteMovie);
+            return mapToUserResponse(user);
         }
+        return null;
     }
 
-    public void addFavoriteSerie(Long id, SerieRequest serieRequest) {
+    public UserResponse addFavoriteSerie(Long id, SerieRequest serieRequest) {
         Optional<User> userOptional = userRepository.findById(id);
 
         if (userOptional.isPresent()) {
@@ -126,7 +127,9 @@ public class UserService {
                     .build();
 
             favoriteSerieRepository.save(favoriteSerie);
+            return mapToUserResponse(user);
         }
+        return null;
     }
 
     public void removeFavoriteMovie(Long id, String mediaCode) {
@@ -182,6 +185,15 @@ public class UserService {
                 .retrieve()
                 .bodyToMono(SerieResponse[].class)
                 .block();
+    }
+
+    private SubscriptionResponse getSubscriptionResponse(User user) {
+        return webClient.get()
+                .uri("http://" + subscriptionServiceBaseUrl + "/api/subscription/{id}", user.getSubscriptionId())
+                .retrieve()
+                .bodyToMono(SubscriptionResponse.class)
+                .block();
+
     }
 }
 

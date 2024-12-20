@@ -7,10 +7,11 @@ import fact.it.mediaservice.repository.GenreRepository;
 import fact.it.mediaservice.service.GenreService;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Arrays;
 import java.util.List;
@@ -20,7 +21,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.*;
 
-@SpringBootTest
+@ExtendWith(MockitoExtension.class)
 public class GenreServiceTests {
     @InjectMocks
     private GenreService genreService;
@@ -55,7 +56,7 @@ public class GenreServiceTests {
         genre.setId("1");
         genre.setName("Horror");
 
-        when(genreRepository.findById("1")).thenReturn(Optional.of(genre));
+        when(genreRepository.findById("100")).thenReturn(Optional.empty());
 
         // Act
         Optional<GenreResponse> genreResponseOptional = genreService.getGenreById("100");
@@ -116,8 +117,6 @@ public class GenreServiceTests {
         Genre genre = new Genre();
         genre.setId("1");
         genre.setName("Horror");
-
-        when(genreRepository.findById("1")).thenReturn(Optional.of(genre));
 
         genreService.deleteGenre("1");
 
