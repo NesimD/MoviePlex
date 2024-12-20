@@ -19,7 +19,7 @@ jobs:
       
       - name: Build, test and package project
         working-directory: ./media-service
-        run: mvn package -DskipTests
+        run: mvn package -B
 
       - name: Docker login
         run: docker login -u ${{ secrets.DOCKER_USER }} -p ${{ secrets.DOCKER_PASSWORD }}
@@ -45,7 +45,7 @@ jobs:
 
       - name: Build, test and package project
         working-directory: ./subscription-service
-        run: mvn package -DskipTests
+        run: mvn package -B
 
       - name: Docker login
         run: docker login -u ${{ secrets.DOCKER_USER }} -p ${{ secrets.DOCKER_PASSWORD }}
@@ -71,7 +71,7 @@ jobs:
         
       - name: Build, test and package project
         working-directory: ./user-service
-        run: mvn package -DskipTests
+        run: mvn package -B
         
       - name: Docker login
         run: docker login -u ${{ secrets.DOCKER_USER }} -p ${{ secrets.DOCKER_PASSWORD }}
@@ -97,13 +97,14 @@ jobs:
         
       - name: Build, test and package project
         working-directory: ./api-gateway
-        run: mvn package -DskipTests
+        run: mvn package -B -DskipTests
         
       - name: Docker login
         run: docker login -u ${{ secrets.DOCKER_USER }} -p ${{ secrets.DOCKER_PASSWORD }}
 
       - name: Docker Build
-        run: docker build -t ${{ secrets.DOCKER_USER }}/api-gateway:latest ./api-gateway
+        run: docker build --build-arg GOOGLE_CLIENTID=${{ secrets.GOOGLE_CLIENTID }} --build-arg GOOGLE_CLIENTSECRET=${{ secrets.GOOGLE_CLIENTSECRET }} -t ${{ secrets.DOCKER_USER }}/ede-api-gateway:latest ./api-gateway
+
 
       - name: Upload container to Docker Hub with Push
         run: docker push ${{ secrets.DOCKER_USER }}/api-gateway:latest

@@ -110,7 +110,10 @@ public class UserService {
                     .build();
 
             favoriteMovieRepository.save(favoriteMovie);
-            return mapToUserResponse(user);
+            Optional<User> userResponseOptional = userRepository.findById(id);
+            if (userResponseOptional.isPresent()) {
+                return mapToUserResponse(userResponseOptional.get());
+            }
         }
         return null;
     }
@@ -127,7 +130,11 @@ public class UserService {
                     .build();
 
             favoriteSerieRepository.save(favoriteSerie);
-            return mapToUserResponse(user);
+            Optional<User> userResponseOptional = userRepository.findById(id);
+
+            if (userResponseOptional.isPresent()) {
+                return mapToUserResponse(userResponseOptional.get());
+            }
         }
         return null;
     }
