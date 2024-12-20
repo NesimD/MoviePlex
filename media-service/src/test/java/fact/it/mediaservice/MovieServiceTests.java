@@ -13,10 +13,11 @@ import fact.it.mediaservice.repository.RatingRepository;
 import fact.it.mediaservice.service.MovieService;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Arrays;
 import java.util.Date;
@@ -26,7 +27,7 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-@SpringBootTest
+@ExtendWith(MockitoExtension.class)
 class MovieServiceTests {
 	@InjectMocks
 	private MovieService movieService;
@@ -431,7 +432,7 @@ class MovieServiceTests {
 		movie.setGenre(genre);
 		movie.setRating(rating);
 
-		when(movieRepository.findById(movieId)).thenReturn(Optional.of(movie));
+		when(movieRepository.findById("100")).thenReturn(Optional.empty());
 		when(directorRepository.findById(directorId)).thenReturn(Optional.of(director));
 		when(genreRepository.findById(genreId)).thenReturn(Optional.of(genre));
 		when(ratingRepository.findById(ratingId)).thenReturn(Optional.of(rating));

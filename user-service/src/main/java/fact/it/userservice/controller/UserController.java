@@ -4,6 +4,7 @@ import fact.it.userservice.dto.MovieRequest;
 import fact.it.userservice.dto.SerieRequest;
 import fact.it.userservice.dto.UserRequest;
 import fact.it.userservice.dto.UserResponse;
+import fact.it.userservice.model.User;
 import fact.it.userservice.service.UserService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -37,21 +38,33 @@ public class UserController {
     }
 
     @PostMapping
-    @ResponseStatus(HttpStatus.OK)
-    public void createUser(@RequestBody UserRequest userRequest) {
-        userService.createUser(userRequest);
+    public ResponseEntity<UserResponse> createUser(@RequestBody UserRequest userRequest) {
+       UserResponse userResponse = userService.createUser(userRequest);
+
+       if (userResponse == null) {
+           return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+       }
+       return new ResponseEntity<>(userResponse, HttpStatus.CREATED);
     }
 
     @PostMapping("{id}/favoriteMovie")
-    @ResponseStatus(HttpStatus.OK)
-    public void addFavoriteMovie(@PathVariable long id, @RequestBody MovieRequest movieRequest) {
-        userService.addFavoriteMovie(id, movieRequest);
+    public ResponseEntity<UserResponse> addFavoriteMovie(@PathVariable long id, @RequestBody MovieRequest movieRequest) {
+        UserResponse userResponse = userService.addFavoriteMovie(id, movieRequest);
+
+        if (userResponse == null) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+        return new ResponseEntity<>(userResponse, HttpStatus.CREATED);
     }
 
     @PostMapping("{id}/favoriteSerie")
-    @ResponseStatus(HttpStatus.OK)
-    public void addFavoriteSerie(@PathVariable long id, @RequestBody SerieRequest serieRequest) {
-        userService.addFavoriteSerie(id, serieRequest);
+    public ResponseEntity<UserResponse> addFavoriteSerie(@PathVariable long id, @RequestBody SerieRequest serieRequest) {
+       UserResponse userResponse = userService.addFavoriteSerie(id, serieRequest);
+
+       if (userResponse == null) {
+           return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+       }
+       return new ResponseEntity<>(userResponse, HttpStatus.CREATED);
     }
 
     @Transactional

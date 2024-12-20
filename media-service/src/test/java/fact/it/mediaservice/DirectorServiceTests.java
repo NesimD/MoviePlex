@@ -7,10 +7,11 @@ import fact.it.mediaservice.repository.DirectorRepository;
 import fact.it.mediaservice.service.DirectorService;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Arrays;
 import java.util.List;
@@ -20,7 +21,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.*;
 
-@SpringBootTest
+@ExtendWith(MockitoExtension.class)
 public class DirectorServiceTests {
     @InjectMocks
     private DirectorService directorService;
@@ -58,7 +59,7 @@ public class DirectorServiceTests {
         director.setFirstName("Tom");
         director.setLastName("Jassens");
 
-        when(directorRepository.findById("1")).thenReturn(Optional.of(director));
+        when(directorRepository.findById("100")).thenReturn(Optional.empty());
 
         // Act
         Optional<DirectorResponse> directorResponseOptional = directorService.getDirectorById("100");
@@ -125,8 +126,6 @@ public class DirectorServiceTests {
         Director director = new Director();
         director.setFirstName("Tom");
         director.setLastName("Jassens");
-
-        when(directorRepository.findById("1")).thenReturn(Optional.of(director));
 
         directorService.deleteDirector("1");
 

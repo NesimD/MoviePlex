@@ -13,10 +13,11 @@ import fact.it.mediaservice.repository.SerieRepository;
 import fact.it.mediaservice.service.SerieService;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Arrays;
 import java.util.Date;
@@ -26,7 +27,7 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-@SpringBootTest
+@ExtendWith(MockitoExtension.class)
 public class SerieServiceTests {
     @InjectMocks
     private SerieService serieService;
@@ -438,10 +439,7 @@ public class SerieServiceTests {
         serie.setGenre(genre);
         serie.setRating(rating);
 
-        when(serieRepository.findById(serieId)).thenReturn(Optional.of(serie));
-        when(genreRepository.findById(genreId)).thenReturn(Optional.of(genre));
-        when(ratingRepository.findById(ratingId)).thenReturn(Optional.of(rating));
-        when(episodeRepository.findById(episodeId)).thenReturn(Optional.of(episode));
+        when(serieRepository.findById("100")).thenReturn(Optional.empty());
 
         // Act
         SerieResponse updatedSerieResponse = serieService.updateSerieById(serieRequest, "100");

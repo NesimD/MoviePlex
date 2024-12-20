@@ -9,10 +9,11 @@ import fact.it.mediaservice.repository.RatingRepository;
 import fact.it.mediaservice.service.EpisodeService;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Arrays;
 import java.util.Date;
@@ -23,7 +24,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.*;
 
-@SpringBootTest
+@ExtendWith(MockitoExtension.class)
 public class EpisodeServiceTests {
     @InjectMocks
     private EpisodeService episodeService;
@@ -85,7 +86,7 @@ public class EpisodeServiceTests {
         episode.setReleaseDate(new Date("11/12/2020"));
         episode.setRating(rating);
 
-        when(episodeRepository.findById("1")).thenReturn(Optional.of(episode));
+        when(episodeRepository.findById("100")).thenReturn(Optional.empty());
 
         // Act
         Optional<EpisodeResponse> episodeResponseOptional = episodeService.getEpisodeById("100");
@@ -191,8 +192,6 @@ public class EpisodeServiceTests {
         episode.setDuration(52);
         episode.setReleaseDate(new Date("11/12/2020"));
         episode.setRating(rating);
-
-        when(episodeRepository.findById("1")).thenReturn(Optional.of(episode));
 
         episodeService.deleteEpisode("1");
 
