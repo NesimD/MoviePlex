@@ -456,6 +456,20 @@ class UserServiceApplicationTests {
 
     @Test public void testAddFavoriteMovieUserFound() {
         // Arrange
+        List<FavoriteMovie> favoriteMovies = new ArrayList<>();
+        FavoriteMovie favoriteMovie = new FavoriteMovie();
+        favoriteMovie.setUser(null);
+        favoriteMovie.setMediaCode("mm001");
+
+        favoriteMovies.add(favoriteMovie);
+
+        List<FavoriteSerie> favoriteSeries = new ArrayList<>();
+        FavoriteSerie favoriteSerie = new FavoriteSerie();
+        favoriteSerie.setUser(null);
+        favoriteMovie.setMediaCode("ss001");
+
+        favoriteSeries.add(favoriteSerie);
+
         User user = new User();
         user.setId(1L);
         user.setFirstName("Peter");
@@ -465,11 +479,83 @@ class UserServiceApplicationTests {
         user.setEmail("peterjanssens@example.com");
         user.setActive(true);
         user.setSubscriptionId(1L);
+        user.setFavoriteMovies(favoriteMovies);
+        user.setFavoriteSeries(favoriteSeries);
+
+        MovieResponse movieResponse = new MovieResponse();
+        Director director = new Director();
+        Genre genre = new Genre();
+        Rating rating = new Rating();
+
+        director.setId("1");
+        director.setFirstName("Tom");
+        director.setLastName("Jassens");
+
+        genre.setId("1");
+        genre.setName("Action");
+
+        rating.setId("1");
+        rating.setName("PG-13");
+        rating.setDescription("Rated PG-13 for reckless and illegal behavior involving teens, violence, language and sexual content");
+
+        movieResponse.setId("1");
+        movieResponse.setMediaCode("mm001");
+        movieResponse.setTitle("The Fast and the Furious: Tokyo Drift");
+        movieResponse.setDescription("A teenager becomes a major competitor in the world of drift racing after moving in with his father in Tokyo to avoid a jail sentence in America.");
+        movieResponse.setDirector(director);
+
+        movieResponse.setReleaseDate(new Date("11/12/2020"));
+        movieResponse.setGenre(genre);
+        movieResponse.setRating(rating);
+        movieResponse.setReviewScore(8);
+
+        SerieResponse serieResponse = new SerieResponse();
+        Episode episode = new Episode();
+
+        genre.setId("1");
+        genre.setName("Action");
+
+        rating.setId("1");
+        rating.setName("PG-13");
+        rating.setDescription("Rated PG-13 for reckless and illegal behavior involving teens, violence, language and sexual content");
+
+        episode.setId("1");
+        episode.setTitle("Long Day's Journey Into Night");
+        episode.setDescription("The Matthews' family road trip takes a horrifying turn when they are detoured to a small town from which they cannot leave. When their family RV crashes, Sheriff Boyd Stevens and other residents rush to save them before the sun goes down.");
+        episode.setDuration(52);
+        episode.setReleaseDate(new Date("11/12/2020"));
+        episode.setRating(rating);
+
+        serieResponse.setMediaCode("ss001");
+        serieResponse.setTitle("From");
+        serieResponse.setReleaseDate(new Date("11/12/2020"));
+        serieResponse.setSeasons(4);
+        serieResponse.setEpisode(episode);
+        serieResponse.setGenre(genre);
+        serieResponse.setRating(rating);
+        serieResponse.setReviewScore(8);
+
+        SerieRequest serieRequest = new SerieRequest();
+        serieRequest.setMediaCode("ss001");
+
+        SubscriptionResponse subscriptionResponse = new SubscriptionResponse();
+        subscriptionResponse.setId(1L);
+        subscriptionResponse.setName("Basic");
 
         MovieRequest movieRequest = new MovieRequest();
         movieRequest.setMediaCode("mm001");
 
         when(userRepository.findById(1L)).thenReturn(Optional.of(user));
+
+        when(webClient.get()).thenReturn(requestHeadersUriSpec);
+        when(requestHeadersUriSpec.uri(anyString(), anyLong())).thenReturn(requestHeadersSpec);
+        when(requestHeadersSpec.retrieve()).thenReturn(responseSpec);
+        when(responseSpec.bodyToMono(SubscriptionResponse.class)).thenReturn(Mono.just(subscriptionResponse));
+
+        when(requestHeadersUriSpec.uri(anyString(), any(Function.class))).thenReturn(requestHeadersSpec);
+        when(responseSpec.bodyToMono(MovieResponse[].class)).thenReturn(Mono.just(new MovieResponse[]{movieResponse}));
+
+        when(responseSpec.bodyToMono(SerieResponse[].class)).thenReturn(Mono.just(new SerieResponse[]{serieResponse}));
 
         // Act
         UserResponse userResponse = userService.addFavoriteMovie(1L, movieRequest);
@@ -500,6 +586,20 @@ class UserServiceApplicationTests {
 
     @Test public void testAddFavoriteSerieUserFound() {
         // Arrange
+        List<FavoriteMovie> favoriteMovies = new ArrayList<>();
+        FavoriteMovie favoriteMovie = new FavoriteMovie();
+        favoriteMovie.setUser(null);
+        favoriteMovie.setMediaCode("mm001");
+
+        favoriteMovies.add(favoriteMovie);
+
+        List<FavoriteSerie> favoriteSeries = new ArrayList<>();
+        FavoriteSerie favoriteSerie = new FavoriteSerie();
+        favoriteSerie.setUser(null);
+        favoriteMovie.setMediaCode("ss001");
+
+        favoriteSeries.add(favoriteSerie);
+
         User user = new User();
         user.setId(1L);
         user.setFirstName("Peter");
@@ -509,11 +609,80 @@ class UserServiceApplicationTests {
         user.setEmail("peterjanssens@example.com");
         user.setActive(true);
         user.setSubscriptionId(1L);
+        user.setFavoriteMovies(favoriteMovies);
+        user.setFavoriteSeries(favoriteSeries);
+
+        MovieResponse movieResponse = new MovieResponse();
+        Director director = new Director();
+        Genre genre = new Genre();
+        Rating rating = new Rating();
+
+        director.setId("1");
+        director.setFirstName("Tom");
+        director.setLastName("Jassens");
+
+        genre.setId("1");
+        genre.setName("Action");
+
+        rating.setId("1");
+        rating.setName("PG-13");
+        rating.setDescription("Rated PG-13 for reckless and illegal behavior involving teens, violence, language and sexual content");
+
+        movieResponse.setId("1");
+        movieResponse.setMediaCode("mm001");
+        movieResponse.setTitle("The Fast and the Furious: Tokyo Drift");
+        movieResponse.setDescription("A teenager becomes a major competitor in the world of drift racing after moving in with his father in Tokyo to avoid a jail sentence in America.");
+        movieResponse.setDirector(director);
+
+        movieResponse.setReleaseDate(new Date("11/12/2020"));
+        movieResponse.setGenre(genre);
+        movieResponse.setRating(rating);
+        movieResponse.setReviewScore(8);
+
+        SerieResponse serieResponse = new SerieResponse();
+        Episode episode = new Episode();
+
+        genre.setId("1");
+        genre.setName("Action");
+
+        rating.setId("1");
+        rating.setName("PG-13");
+        rating.setDescription("Rated PG-13 for reckless and illegal behavior involving teens, violence, language and sexual content");
+
+        episode.setId("1");
+        episode.setTitle("Long Day's Journey Into Night");
+        episode.setDescription("The Matthews' family road trip takes a horrifying turn when they are detoured to a small town from which they cannot leave. When their family RV crashes, Sheriff Boyd Stevens and other residents rush to save them before the sun goes down.");
+        episode.setDuration(52);
+        episode.setReleaseDate(new Date("11/12/2020"));
+        episode.setRating(rating);
+
+        serieResponse.setMediaCode("ss001");
+        serieResponse.setTitle("From");
+        serieResponse.setReleaseDate(new Date("11/12/2020"));
+        serieResponse.setSeasons(4);
+        serieResponse.setEpisode(episode);
+        serieResponse.setGenre(genre);
+        serieResponse.setRating(rating);
+        serieResponse.setReviewScore(8);
 
         SerieRequest serieRequest = new SerieRequest();
         serieRequest.setMediaCode("ss001");
 
+        SubscriptionResponse subscriptionResponse = new SubscriptionResponse();
+        subscriptionResponse.setId(1L);
+        subscriptionResponse.setName("Basic");
+
         when(userRepository.findById(1L)).thenReturn(Optional.of(user));
+
+        when(webClient.get()).thenReturn(requestHeadersUriSpec);
+        when(requestHeadersUriSpec.uri(anyString(), anyLong())).thenReturn(requestHeadersSpec);
+        when(requestHeadersSpec.retrieve()).thenReturn(responseSpec);
+        when(responseSpec.bodyToMono(SubscriptionResponse.class)).thenReturn(Mono.just(subscriptionResponse));
+
+        when(requestHeadersUriSpec.uri(anyString(), any(Function.class))).thenReturn(requestHeadersSpec);
+        when(responseSpec.bodyToMono(MovieResponse[].class)).thenReturn(Mono.just(new MovieResponse[]{movieResponse}));
+
+        when(responseSpec.bodyToMono(SerieResponse[].class)).thenReturn(Mono.just(new SerieResponse[]{serieResponse}));
 
         // Act
         UserResponse userResponse = userService.addFavoriteSerie(1L, serieRequest);
