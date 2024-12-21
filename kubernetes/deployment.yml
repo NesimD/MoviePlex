@@ -1,0 +1,228 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mongo-media
+spec:
+  selector:
+    matchLabels:
+      app: mongo-media
+  template:
+    metadata:
+      labels:
+        app: mongo-media
+    spec:
+      containers:
+        - name: mongo-media
+          image: mongo:4.4.6
+          ports:
+            - containerPort: 27017
+              name: mongo-media
+          env:
+            - name: MONGODB_HOST
+              value: mongo-media
+            - name: MONGODB_PORT
+              value: "27017"
+          volumeMounts:
+            - mountPath: /data/db
+              name: mongodb-media-storage
+      volumes:
+        - name: mongodb-media-storage
+          persistentVolumeClaim:
+            claimName: mongodb-media-pvc
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sub-db
+spec:
+  selector:
+    matchLabels:
+      app: sub-db
+  template:
+    metadata:
+      labels:
+        app: sub-db
+    spec:
+      containers:
+        - name: sub-db
+          image: mysql:latest
+          ports:
+            - containerPort: 3306
+              name: sub-db
+          env:
+            - name: MYSQL_ROOT_PASSWORD
+              value: abc123
+          volumeMounts:
+            - mountPath: /var/lib/mysql
+              name: mysql-subscription-storage
+      volumes:
+        - name: mysql-subscription-storage
+          persistentVolumeClaim:
+            claimName: mysql-subscription-pvc
+
+--- 
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: user-db
+spec:
+  selector:
+    matchLabels:
+      app: user-db
+  template:
+    metadata:
+      labels:
+        app: user-db
+    spec:
+      containers:
+        - name: user-db
+          image: mysql:latest
+          ports:
+            - containerPort: 3306
+              name: user-db
+          env:
+            - name: MYSQL_ROOT_PASSWORD
+              value: abc123
+          volumeMounts:
+            - mountPath: /var/lib/mysql
+              name: mysql-user-storage
+      volumes:
+        - name: mysql-user-storage
+          persistentVolumeClaim:
+            claimName: mysql-user-pvc
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: media-app
+spec:
+  selector:
+    matchLabels:
+      app: media-app
+  template:
+    metadata:
+      labels:
+        app: media-app
+    spec:
+      containers:
+        - name: media-app
+          image: nesimd/media-service
+          ports:
+            - containerPort: 8080
+              name: media-app
+          livenessProbe:
+            httpGet:
+              path: /api/media/movie/all
+              port: media-app
+            initialDelaySeconds: 10
+            periodSeconds: 5
+          readinessProbe:
+            httpGet: 
+              path: /api/media/movie/all
+              port: media-app
+            initialDelaySeconds: 2
+          env:
+            - name: MONGODB_PORT
+              value: "27017"
+            - name: MONGODB_HOST
+              value: mongo-media
+
+---
+
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sub-app
+spec:
+  selector:
+    matchLabels:
+      app: sub-app
+  template:
+    metadata:
+      labels:
+        app: sub-app
+    spec:
+      containers:
+        - name: sub-app
+          image: nesimd/prometheus-test
+          ports:
+            - containerPort: 8082
+              name: sub-app
+          env:
+            - name: MYSQL_DB_USERNAME
+              value: root
+            - name: MYSQL_DB_PASSWORD
+              value: abc123
+            - name: MYSQL_DB_HOST
+              value: sub-db-service
+            - name: MYSQL_DB_PORT
+              value: "3306"
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: user-app
+spec:
+  selector:
+    matchLabels:
+      app: user-app
+  template:
+    metadata:
+      labels:
+        app: user-app
+    spec:
+      containers:
+        - name: user-app
+          image: nesimd/user-service
+          ports:
+            - containerPort: 8081
+              name: user-app
+          env:
+            - name: MYSQL_DB_USERNAME
+              value: root
+            - name: MYSQL_DB_PASSWORD
+              value: abc123
+            - name: MYSQL_DB_HOST
+              value: user-db-service
+            - name: MYSQL_DB_PORT
+              value: "3306"
+            - name: MEDIA_SERVICE_BASEURL
+              value: media-service:8080
+            - name: SUBSCRIPTION_SERVICE_BASEURL
+              value: sub-service:8082
+
+---
+
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: api-gateway
+spec:
+  selector:
+    matchLabels:
+      app: api-gateway
+  template:
+    metadata:
+      labels:
+        app: api-gateway
+    spec:
+      containers:
+        - name: api-gateway
+          image: nesimd/api-gateway
+          ports:
+            - containerPort: 8083
+              name: api-gateway
+          env:
+            - name: MEDIA_SERVICE_BASEURL
+              value: media-service:8080
+            - name: USER_SERVICE_BASEURL
+              value: user-service:8081

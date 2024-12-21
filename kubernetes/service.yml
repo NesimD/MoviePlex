@@ -1,0 +1,88 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: user-db-service
+spec:
+  ports:
+    - port: 3306
+      targetPort: user-db
+  selector:
+    app: user-db
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: mongo-media
+spec:
+  ports:
+    - port: 27017
+      targetPort: mongo-media
+  selector:
+    app: mongo-media
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: sub-db-service
+spec:
+  ports:
+    - port: 3306
+      targetPort: sub-db
+  selector:
+    app: sub-db
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: media-service
+spec:
+  ports:
+    - port: 8080
+      targetPort: media-app
+  selector:
+    app: media-app
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: user-service
+spec:
+  ports:
+    - port: 8081
+      targetPort: user-app
+  selector:
+    app: user-app
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: sub-service
+spec:
+  ports:
+    - port: 8082
+      targetPort: sub-app
+  selector:
+    app: sub-app
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: gateway-service
+spec:
+  ports:
+    - port: 8083
+      targetPort: api-gateway
+  selector:
+    app: api-gateway
