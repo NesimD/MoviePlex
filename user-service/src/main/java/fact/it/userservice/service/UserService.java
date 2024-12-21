@@ -110,10 +110,11 @@ public class UserService {
                     .build();
 
             favoriteMovieRepository.save(favoriteMovie);
-            Optional<User> userResponseOptional = userRepository.findById(id);
-            if (userResponseOptional.isPresent()) {
-                return mapToUserResponse(userResponseOptional.get());
-            }
+            UserResponse userResponse = mapToUserResponse(user);
+            userResponse.setSubscription(getSubscriptionResponse(user));
+            userResponse.setFavoriteMovies(getMovieResponses(user));
+            userResponse.setFavoriteSeries(getSerieResponses(user));
+            return userResponse;
         }
         return null;
     }
@@ -130,11 +131,11 @@ public class UserService {
                     .build();
 
             favoriteSerieRepository.save(favoriteSerie);
-            Optional<User> userResponseOptional = userRepository.findById(id);
-
-            if (userResponseOptional.isPresent()) {
-                return mapToUserResponse(userResponseOptional.get());
-            }
+            UserResponse userResponse = mapToUserResponse(user);
+            userResponse.setSubscription(getSubscriptionResponse(user));
+            userResponse.setFavoriteMovies(getMovieResponses(user));
+            userResponse.setFavoriteSeries(getSerieResponses(user));
+            return userResponse;
         }
         return null;
     }

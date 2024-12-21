@@ -24,12 +24,6 @@ spring:
   cloud:
     gateway:
       routes:
-        - id: user-service
-          uri: http://${USER_SERVICE_BASEURL:localhost:8081}
-          predicates:
-            - Path=/users
-          filters:
-            - SetPath=/api/user
         - id: user-service-get-by-id
           uri: http://${USER_SERVICE_BASEURL:localhost:8081}
           predicates:
@@ -37,6 +31,20 @@ spring:
             - Method=GET
           filters:
             - SetPath=/api/user/{id}
+        - id: user-service-user-all
+          uri: http://${USER_SERVICE_BASEURL:localhost:8081}
+          predicates:
+            - Path=/users/all
+            - Method=GET
+          filters:
+            - SetPath=/api/user/all
+        - id: user-service-create-user
+          uri: http://${USER_SERVICE_BASEURL:localhost:8081}
+          predicates:
+            - Path=/users
+            - Method=POST
+          filters:
+            - SetPath=/api/user
         - id: user-service-add-favorite-movie
           uri: http://${USER_SERVICE_BASEURL:localhost:8081}
           predicates:
@@ -65,7 +73,8 @@ spring:
             - Method=DELETE
           filters:
             - SetPath=/api/user/{id}/favoriteSerie/{mediaCode}
-        - id: media-service-movie
+
+        - id: media-service-movies-by-media-codes
           uri: http://${MEDIA_SERVICE_BASEURL:localhost:8080}
           predicates:
             - Path=/movies
@@ -78,7 +87,29 @@ spring:
             - Method=GET
           filters:
             - SetPath=/api/media/movie/{mediaCode}
-        - id: media-service-serie
+        - id: media-service-movie-all
+          uri: http://${MEDIA_SERVICE_BASEURL:localhost:8080}
+          predicates:
+            - Path=/movies/all
+            - Method=GET
+          filters:
+            - SetPath=/api/media/movie/all
+        - id: media-service-movie-update
+          uri: http://${MEDIA_SERVICE_BASEURL:localhost:8080}
+          predicates:
+            - Path=/movies/{id}
+            - Method=PUT
+          filters:
+            - SetPath=/api/media/movie/{id}
+        - id: media-service-movie-create
+          uri: http://${MEDIA_SERVICE_BASEURL:localhost:8080}
+          predicates:
+            - Path=/movies
+            - Method=POST
+          filters:
+            - SetPath=/api/media/movie
+
+        - id: media-service-series-by-media-codes
           uri: http://${MEDIA_SERVICE_BASEURL:localhost:8080}
           predicates:
             - Path=/series
@@ -87,13 +118,28 @@ spring:
         - id: media-service-serie-mediacode
           uri: http://${MEDIA_SERVICE_BASEURL:localhost:8080}
           predicates:
-            - Path=/series/{mediacode}
+            - Path=/series/{mediaCode}
+            - Method=GET
           filters:
-            - SetPath=/api/media/serie/{mediacode}
+            - SetPath=/api/media/serie/{mediaCode}
         - id: media-service-serie-all
           uri: http://${MEDIA_SERVICE_BASEURL:localhost:8080}
           predicates:
-            - Path=/series
+            - Path=/series/all
             - Method=GET
           filters:
             - SetPath=/api/media/serie/all
+        - id: media-service-serie-update
+          uri: http://${MEDIA_SERVICE_BASEURL:localhost:8080}
+          predicates:
+            - Path=/series/{id}
+            - Method=PUT
+          filters:
+            - SetPath=/api/media/serie/{id}
+        - id: media-service-serie-create
+          uri: http://${MEDIA_SERVICE_BASEURL:localhost:8080}
+          predicates:
+            - Path=/series
+            - Method=POST
+          filters:
+            - SetPath=/api/media/serie
