@@ -2,6 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: mongo-media
+  namespace: demo
 spec:
   selector:
     matchLabels:
@@ -36,6 +37,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: sub-db
+  namespace: demo
 spec:
   selector:
     matchLabels:
@@ -68,6 +70,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: user-db
+  namespace: demo
 spec:
   selector:
     matchLabels:
@@ -100,6 +103,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: media-app
+  namespace: demo
 spec:
   selector:
     matchLabels:
@@ -139,6 +143,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: sub-app
+  namespace: demo
 spec:
   selector:
     matchLabels:
@@ -150,7 +155,7 @@ spec:
     spec:
       containers:
         - name: sub-app
-          image: nesimd/prometheus-test
+          image: nesimd/subscription-service
           ports:
             - containerPort: 8082
               name: sub-app
@@ -170,6 +175,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: user-app
+  namespace: demo
 spec:
   selector:
     matchLabels:
@@ -206,6 +212,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: api-gateway
+  namespace: demo
 spec:
   selector:
     matchLabels:
