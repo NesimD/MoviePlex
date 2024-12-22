@@ -76,6 +76,7 @@ public class SerieService {
             serie.setReleaseDate(serieRequest.getReleaseDate());
             serie.setRating(rating);
             serie.setReviewScore(serieRequest.getReviewScore());
+            serieRepository.save(serie);
             return mapToSerieResponse(serie);
         }
         return null;
