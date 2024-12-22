@@ -121,13 +121,13 @@ spec:
               name: media-app
           livenessProbe:
             httpGet:
-              path: /api/media/movie/all
+              path: /actuator/health/liveness
               port: media-app
             initialDelaySeconds: 10
             periodSeconds: 5
           readinessProbe:
             httpGet: 
-              path: /api/media/movie/all
+              path: /actuator/health/readiness
               port: media-app
             initialDelaySeconds: 2
           env:
@@ -159,6 +159,17 @@ spec:
           ports:
             - containerPort: 8082
               name: sub-app
+          livenessProbe:
+            httpGet:
+              path: /actuator/health/liveness
+              port: sub-app
+            initialDelaySeconds: 10
+            periodSeconds: 5
+          readinessProbe:
+            httpGet: 
+              path: /actuator/health/readiness
+              port: sub-app
+            initialDelaySeconds: 2
           env:
             - name: MYSQL_DB_USERNAME
               value: root
@@ -191,6 +202,17 @@ spec:
           ports:
             - containerPort: 8081
               name: user-app
+          livenessProbe:
+            httpGet:
+              path: /actuator/health/liveness
+              port: user-app
+            initialDelaySeconds: 10
+            periodSeconds: 5
+          readinessProbe:
+            httpGet: 
+              path: /actuator/health/readiness
+              port: user-app
+            initialDelaySeconds: 2
           env:
             - name: MYSQL_DB_USERNAME
               value: root
@@ -233,3 +255,5 @@ spec:
               value: media-service:8080
             - name: USER_SERVICE_BASEURL
               value: user-service:8081
+            - name: PROMETHEUS_BASEURL
+              value: prometheus:9090
