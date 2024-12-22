@@ -439,7 +439,7 @@ public class SerieServiceTests {
         serie.setGenre(genre);
         serie.setRating(rating);
 
-        when(serieRepository.findById("ss100")).thenReturn(null);
+        when(serieRepository.findSerieByMediaCode("ss100")).thenReturn(null);
 
         // Act
         SerieResponse updatedSerieResponse = serieService.updateSerieByMediaCode(serieRequest, "ss100");
