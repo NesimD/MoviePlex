@@ -110,8 +110,8 @@ Tests are written for the services. All tests have 100% coverage on the services
 ### Additional Features
 
 - **2.2** Convert the deployment docker-compose.yml to Kubernetes Manifest .yml files
-    - **2.2.1** Zet monitoring op met Prometheus en demonstreer met screenshots. 
-        - **2.2.1.1** Zet een Grafana om te gebruiken in plaats van de standaard Prometheus Expression Browser met PromQL
+    - **2.2.1** Set up monitoring with Prometheus and demonstrate with screenshots. 
+        - **2.2.1.1** Set up a Grafana to use instead of the default Prometheus Expression Browser with PromQL
 
 ## API Requests
 
