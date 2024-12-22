@@ -76,6 +76,7 @@ public class MovieService {
             movie.setGenre(genre);
             movie.setRating(rating);
             movie.setReviewScore(movieRequest.getReviewScore());
+            movieRepository.save(movie);
             return mapToMovieResponse(movie);
         }
         return null;
