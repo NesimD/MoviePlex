@@ -143,3 +143,119 @@ spring:
             - Method=POST
           filters:
             - SetPath=/api/media/serie
+
+        - id: media-service-director-post
+          uri: http://${MEDIA_SERVICE_BASEURL:localhost:8080}
+          predicates:
+            - Path=/directors
+            - Method=POST
+          filters:
+            - SetPath=/api/media/director
+        - id: media-service-directors-all
+          uri: http://${MEDIA_SERVICE_BASEURL:localhost:8080}
+          predicates:
+            - Path=/directors/all
+            - Method=GET
+          filters:
+            - SetPath=/api/media/director/all
+        - id: media-service-director-get-by-id
+          uri: http://${MEDIA_SERVICE_BASEURL:localhost:8080}
+          predicates:
+            - Path=/directors/{id}
+            - Method=GET
+          filters:
+            - SetPath=/api/media/director/{id}
+        - id: media-service-director-delete
+          uri: http://${MEDIA_SERVICE_BASEURL:localhost:8080}
+          predicates:
+            - Path=/directors/{id}
+            - Method=DELETE
+          filters:
+            - SetPath=/api/media/director/{id}
+
+        - id: media-service-episode-post
+          uri: http://${MEDIA_SERVICE_BASEURL:localhost:8080}
+          predicates:
+            - Path=/episodes
+            - Method=POST
+          filters:
+            - SetPath=/api/media/episode
+        - id: media-service-episode-all
+          uri: http://${MEDIA_SERVICE_BASEURL:localhost:8080}
+          predicates:
+            - Path=/episodes/all
+            - Method=GET
+          filters:
+            - SetPath=/api/media/episode/all
+        - id: media-service-episode-get-by-id
+          uri: http://${MEDIA_SERVICE_BASEURL:localhost:8080}
+          predicates:
+            - Path=/episodes/{id}
+            - Method=GET
+          filters:
+            - SetPath=/api/media/episode/{id}
+        - id: media-service-episode-delete
+          uri: http://${MEDIA_SERVICE_BASEURL:localhost:8080}
+          predicates:
+            - Path=/episodes/{id}
+            - Method=DELETE
+          filters:
+            - SetPath=/api/media/episode/{id}
+
+        - id: media-service-genre-post
+          uri: http://${MEDIA_SERVICE_BASEURL:localhost:8080}
+          predicates:
+            - Path=/genres
+            - Method=POST
+          filters:
+            - SetPath=/api/media/genre
+        - id: media-service-genres-all
+          uri: http://${MEDIA_SERVICE_BASEURL:localhost:8080}
+          predicates:
+            - Path=/genres/all
+            - Method=GET
+          filters:
+            - SetPath=/api/media/genre/all
+        - id: media-service-genre-get-by-id
+          uri: http://${MEDIA_SERVICE_BASEURL:localhost:8080}
+          predicates:
+            - Path=/genres/{id}
+            - Method=GET
+          filters:
+            - SetPath=/api/media/genre/{id}
+        - id: media-service-genre-delete
+          uri: http://${MEDIA_SERVICE_BASEURL:localhost:8080}
+          predicates:
+            - Path=/genres/{id}
+            - Method=DELETE
+          filters:
+            - SetPath=/api/media/genre/{id}
+
+        - id: media-service-rating-post
+          uri: http://${MEDIA_SERVICE_BASEURL:localhost:8080}
+          predicates:
+            - Path=/ratings
+            - Method=POST
+          filters:
+            - SetPath=/api/media/rating
+        - id: media-service-ratings-all
+          uri: http://${MEDIA_SERVICE_BASEURL:localhost:8080}
+          predicates:
+            - Path=/ratings/all
+            - Method=GET
+          filters:
+            - SetPath=/api/media/rating/all
+        - id: media-service-rating-get-by-id
+          uri: http://${MEDIA_SERVICE_BASEURL:localhost:8080}
+          predicates:
+            - Path=/ratings/{id}
+            - Method=GET
+          filters:
+            - SetPath=/api/media/rating/{id}
+        - id: media-service-rating-delete
+          uri: http://${MEDIA_SERVICE_BASEURL:localhost:8080}
+          predicates:
+            - Path=/ratings/{id}
+            - Method=DELETE
+          filters:
+            - SetPath=/api/media/rating/{id}

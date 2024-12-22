@@ -20,10 +20,10 @@ public class SecurityConfig {
                         exchange.pathMatchers(HttpMethod.GET,
                                         "/movies", "/movies/{mediaCode}", "/movies/all",
                                         "/series", "/series/{mediaCode}", "/series/all",
-                                        "/directors", "/directors/all",
-                                        "/episodes", "/episodes/all",
-                                        "/genres", "/genres/all",
-                                        "/ratings", "/ratings/all")
+                                        "/directors/{id}", "/directors/all",
+                                        "/episodes/{id}", "/episodes/all",
+                                        "/genres/{id}", "/genres/all",
+                                        "/ratings/{id}", "/ratings/all")
                                 .permitAll()
                                 .anyExchange()
                                 .authenticated()
