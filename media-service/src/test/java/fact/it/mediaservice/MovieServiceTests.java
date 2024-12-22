@@ -326,9 +326,9 @@ class MovieServiceTests {
 		Assertions.assertThat(movieResponse).isNotNull();
 	}
 
-	@Test public void testUpdateMovieByIdMovieFound() {
+	@Test public void testUpdateMovieByMediaCodeMovieFound() {
 		// Arrange
-		String movieId = "1";
+		String mediaCode = "mm001";
 		String directorId = "1";
 		String genreId = "1";
 		String ratingId = "1";
@@ -344,7 +344,7 @@ class MovieServiceTests {
 		movieRequest.setReviewScore(8);
 
 		Movie movie = new Movie();
-		movie.setId(movieId);
+		movie.setId("1");
 		movie.setMediaCode("mm001");
 		movie.setTitle("Fast & Furious");
 		movie.setDescription("Brian O'Conner, back working for the FBI in Los Angeles, teams up with Dominic Toretto to bring down a heroin importer by infiltrating his operation.");
@@ -369,13 +369,13 @@ class MovieServiceTests {
 		movie.setGenre(genre);
 		movie.setRating(rating);
 
-		when(movieRepository.findById(movieId)).thenReturn(Optional.of(movie));
+		when(movieRepository.findMovieByMediaCode(mediaCode)).thenReturn(movie);
 		when(directorRepository.findById(directorId)).thenReturn(Optional.of(director));
 		when(genreRepository.findById(genreId)).thenReturn(Optional.of(genre));
 		when(ratingRepository.findById(ratingId)).thenReturn(Optional.of(rating));
 
 		// Act
-		MovieResponse updatedMovieResponse = movieService.updateMovieById(movieRequest, movieId);
+		MovieResponse updatedMovieResponse = movieService.updateMovieByMediaCode(movieRequest, mediaCode);
 
 		// Assert
 		assertNotNull(updatedMovieResponse);
@@ -389,7 +389,7 @@ class MovieServiceTests {
 		assertEquals(movieRequest.getReviewScore(), updatedMovieResponse.getReviewScore());
 	}
 
-	@Test public void testUpdateMovieByIdMovieNotFound() {
+	@Test public void testUpdateMovieByMediaCodeMovieNotFound() {
 		// Arrange
 		String movieId = "1";
 		String directorId = "1";
@@ -432,13 +432,13 @@ class MovieServiceTests {
 		movie.setGenre(genre);
 		movie.setRating(rating);
 
-		when(movieRepository.findById("100")).thenReturn(Optional.empty());
+		when(movieRepository.findMovieByMediaCode("mm100")).thenReturn(null);
 		when(directorRepository.findById(directorId)).thenReturn(Optional.of(director));
 		when(genreRepository.findById(genreId)).thenReturn(Optional.of(genre));
 		when(ratingRepository.findById(ratingId)).thenReturn(Optional.of(rating));
 
 		// Act
-		MovieResponse updatedMovieResponse = movieService.updateMovieById(movieRequest, "100");
+		MovieResponse updatedMovieResponse = movieService.updateMovieByMediaCode(movieRequest, "mm100");
 
 		// Assert
 		assertNull(updatedMovieResponse);

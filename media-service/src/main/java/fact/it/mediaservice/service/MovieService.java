@@ -61,15 +61,13 @@ public class MovieService {
                 .toList();
     }
 
-    public MovieResponse updateMovieById(MovieRequest movieRequest, String id) {
-        Optional<Movie> movieOptional = movieRepository.findById(id);
+    public MovieResponse updateMovieByMediaCode(MovieRequest movieRequest, String mediaCode) {
+        Movie movie = movieRepository.findMovieByMediaCode(mediaCode);
         Director director = directorRepository.findById(movieRequest.getDirectorId()).orElse(null);
         Genre genre = genreRepository.findById(movieRequest.getGenreId()).orElse(null);
         Rating rating = ratingRepository.findById(movieRequest.getRatingId()).orElse(null);
 
-        if (movieOptional.isPresent()) {
-            Movie movie = movieOptional.get();
-
+        if (movie != null) {
             movie.setMediaCode(movieRequest.getMediaCode());
             movie.setTitle(movieRequest.getTitle());
             movie.setDescription(movieRequest.getDescription());

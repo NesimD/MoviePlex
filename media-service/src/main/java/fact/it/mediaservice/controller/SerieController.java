@@ -44,9 +44,9 @@ public class SerieController {
         return new ResponseEntity<>(serieResponse, HttpStatus.CREATED);
     }
 
-    @PutMapping("{id}")
-    public ResponseEntity<SerieResponse> updateSerie(@RequestBody SerieRequest serieRequest, @PathVariable("id") String id) {
-        SerieResponse serieResponse = serieService.updateSerieById(serieRequest, id);
+    @PutMapping("{mediaCode}")
+    public ResponseEntity<SerieResponse> updateSerie(@RequestBody SerieRequest serieRequest, @PathVariable("mediaCode") String mediaCode) {
+        SerieResponse serieResponse = serieService.updateSerieByMediaCode(serieRequest, mediaCode);
 
         if (serieResponse == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);

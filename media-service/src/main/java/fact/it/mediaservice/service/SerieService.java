@@ -61,15 +61,13 @@ public class SerieService {
                 .toList();
     }
 
-    public SerieResponse updateSerieById(SerieRequest serieRequest, String id) {
-        Optional<Serie> serieOptional = serieRepository.findById(id);
+    public SerieResponse updateSerieByMediaCode(SerieRequest serieRequest, String mediaCode) {
+        Serie serie = serieRepository.findSerieByMediaCode(mediaCode);
         Genre genre = genreRepository.findById(serieRequest.getGenreId()).orElse(null);
         Rating rating = ratingRepository.findById(serieRequest.getRatingId()).orElse(null);
         Episode episode = episodeRepository.findById(serieRequest.getEpisodeId()).orElse(null);
 
-        if (serieOptional.isPresent()) {
-            Serie serie = serieOptional.get();
-
+        if (serie != null) {
             serie.setMediaCode(serieRequest.getMediaCode());
             serie.setTitle(serieRequest.getTitle());
             serie.setGenre(genre);
