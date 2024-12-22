@@ -97,10 +97,10 @@ spring:
         - id: media-service-movie-update
           uri: http://${MEDIA_SERVICE_BASEURL:localhost:8080}
           predicates:
-            - Path=/movies/{id}
+            - Path=/movies/{mediaCode}
             - Method=PUT
           filters:
-            - SetPath=/api/media/movie/{id}
+            - SetPath=/api/media/movie/{mediaCode}
         - id: media-service-movie-create
           uri: http://${MEDIA_SERVICE_BASEURL:localhost:8080}
           predicates:
@@ -132,10 +132,10 @@ spring:
         - id: media-service-serie-update
           uri: http://${MEDIA_SERVICE_BASEURL:localhost:8080}
           predicates:
-            - Path=/series/{id}
+            - Path=/series/{mediaCode}
             - Method=PUT
           filters:
-            - SetPath=/api/media/serie/{id}
+            - SetPath=/api/media/serie/{mediaCode}
         - id: media-service-serie-create
           uri: http://${MEDIA_SERVICE_BASEURL:localhost:8080}
           predicates:
