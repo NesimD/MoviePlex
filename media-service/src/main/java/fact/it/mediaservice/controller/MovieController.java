@@ -45,9 +45,9 @@ public class MovieController {
         return new ResponseEntity<>(movieResponse, HttpStatus.CREATED);
     }
 
-    @PutMapping("{id}")
-    public ResponseEntity<MovieResponse> updateMovie(@RequestBody MovieRequest movieRequest, @PathVariable("id") String id) {
-        MovieResponse movieResponse = movieService.updateMovieById(movieRequest, id);
+    @PutMapping("{mediaCode}")
+    public ResponseEntity<MovieResponse> updateMovie(@RequestBody MovieRequest movieRequest, @PathVariable("mediaCode") String mediaCode) {
+        MovieResponse movieResponse = movieService.updateMovieByMediaCode(movieRequest, mediaCode);
 
         if (movieResponse == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);

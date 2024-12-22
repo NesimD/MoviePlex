@@ -329,9 +329,9 @@ public class SerieServiceTests {
         Assertions.assertThat(serieResponse).isNotNull();
     }
 
-    @Test public void testUpdateSerieByIdSerieFound() {
+    @Test public void testUpdateSerieByMediaCodeSerieFound() {
         // Arrange
-        String serieId = "1";
+        String mediaCode = "ss001";
         String genreId = "1";
         String ratingId = "1";
         String episodeId = "1";
@@ -347,7 +347,7 @@ public class SerieServiceTests {
         serieRequest.setReviewScore(8);
 
         Serie serie = new Serie();
-        serie.setId(serieId);
+        serie.setId("1");
         serie.setMediaCode("ss001");
         serie.setTitle("From");
         serie.setSeasons(4);
@@ -374,13 +374,13 @@ public class SerieServiceTests {
         serie.setGenre(genre);
         serie.setRating(rating);
 
-        when(serieRepository.findById(serieId)).thenReturn(Optional.of(serie));
+        when(serieRepository.findSerieByMediaCode(mediaCode)).thenReturn(serie);
         when(genreRepository.findById(genreId)).thenReturn(Optional.of(genre));
         when(ratingRepository.findById(ratingId)).thenReturn(Optional.of(rating));
         when(episodeRepository.findById(episodeId)).thenReturn(Optional.of(episode));
 
         // Act
-        SerieResponse updatedSerieResponse = serieService.updateSerieById(serieRequest, serieId);
+        SerieResponse updatedSerieResponse = serieService.updateSerieByMediaCode(serieRequest, mediaCode);
 
         // Assert
         assertNotNull(updatedSerieResponse);
@@ -394,7 +394,7 @@ public class SerieServiceTests {
         assertEquals(serieRequest.getReviewScore(), updatedSerieResponse.getReviewScore());
     }
 
-    @Test public void testUpdateSerieByIdSerieNotFound() {
+    @Test public void testUpdateSerieByMediaCodeSerieNotFound() {
         // Arrange
         String serieId = "1";
         String genreId = "1";
@@ -439,10 +439,10 @@ public class SerieServiceTests {
         serie.setGenre(genre);
         serie.setRating(rating);
 
-        when(serieRepository.findById("100")).thenReturn(Optional.empty());
+        when(serieRepository.findSerieByMediaCode("ss100")).thenReturn(null);
 
         // Act
-        SerieResponse updatedSerieResponse = serieService.updateSerieById(serieRequest, "100");
+        SerieResponse updatedSerieResponse = serieService.updateSerieByMediaCode(serieRequest, "ss100");
 
         // Assert
         assertNull(updatedSerieResponse);
